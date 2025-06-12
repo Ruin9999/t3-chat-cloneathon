@@ -1,31 +1,29 @@
-import type { Metadata } from "next";
 import "./globals.css";
+import type { Metadata } from "next";
 
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ConvexClientProvider } from "@/components/providers/ConvexClientProvider";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import CustomSidebar from "./_components/custom_sidebar";
 
 export const metadata: Metadata = {
-  title: "Chat Forge",
+  title: "Huh.",
   description: "Connect and converse with AI models.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider>
-      <ConvexClientProvider>
-        <html lang="en">
-          <body className={`antialiased`}>
+    <html lang="en">
+      <body className="antialiased">
+        <ClerkProvider>
+          <ConvexClientProvider>
             <SidebarProvider>
-              {children}
+              <CustomSidebar />
+              <main className="flex-1 flex">{children}</main>
             </SidebarProvider>
-          </body>
-        </html>
-      </ConvexClientProvider>
-    </ClerkProvider>
+          </ConvexClientProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
