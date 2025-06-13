@@ -3,13 +3,15 @@ import { v } from "convex/values";
 
 export default defineSchema({
   chats: defineTable({
-    title: v.string(),
+    title: v.optional(v.string()),
     owner: v.string(),
-    participants: v.array(v.string()),
+    participants: v.optional(v.array(v.string())),
   }),
   messages: defineTable({
+    chatId: v.string(),
     content: v.object({ text: v.string() }),
     sender: v.string(),
+    avatarUrl: v.string(),
     model: v.string(),
     type: v.union(v.literal("text"), v.literal("image"), v.literal("file")),
   }),
@@ -18,5 +20,6 @@ export default defineSchema({
     name: v.string(),
     category: v.string(),
     logo: v.string(),
+    enabled: v.optional(v.boolean()),
   })
 });

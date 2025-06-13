@@ -6,7 +6,7 @@ export const get = query({
     chatId: v.string(),
   },
   handler: async ({ db }, { chatId }) => {
-    const messages = await db.query("messages").filter((q) => q.eq(q.field("_id"), chatId)).collect();
+    const messages = await db.query("messages").filter((q) => q.eq(q.field("chatId"), chatId)).collect();
     return messages;
   },
 })
