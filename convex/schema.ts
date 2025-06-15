@@ -18,7 +18,7 @@ export default defineSchema({
   models: defineTable({
     id: v.string(),
     name: v.string(),
-    category: v.string(),
+    category: v.union(v.literal("OpenAI"), v.literal("Anthropic"), v.literal("Google"), v.literal("XAI"), v.literal("DeepSeek")),
     logo: v.string(),
     enabled: v.optional(v.boolean()),
   })

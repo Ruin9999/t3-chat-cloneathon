@@ -48,8 +48,8 @@ export default function ChatTextboxButtons(props: ChatTextboxButtonProps) {
         return <Square className="size-4 fill-black" />;
       case "ready":
         return <Send className="size-4" />;
-      case "error":
-        return <Square className="size-4 fill-red-500" />;
+      default:
+        return <Send className="size-4" />;
     }
   };
 
@@ -118,7 +118,7 @@ export default function ChatTextboxButtons(props: ChatTextboxButtonProps) {
         <Mic className="size-4" />
       </Button>
       <Button variant="default" size="sm" disabled={(generationStatus != "ready" && generationStatus !== "streaming") || (generationStatus === "ready" && !isSubmittable)} onClick={onSubmit}>
-        {renderSubmitIcon()}
+        {renderSubmitIcon()} {/* TODO: Button does not work after an error has occured. Need to figure it out. */}
       </Button>
     </div>
   </div>

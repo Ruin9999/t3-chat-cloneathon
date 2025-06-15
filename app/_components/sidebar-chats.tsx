@@ -26,7 +26,7 @@ export default function SidebarChats() {
           <span className="sr-only">New Chat</span>
         </Button>
       </SidebarGroupLabel>
-      { chats?.length ? chats.map((chat) => <ChatButton key={chat._id} id={chat._id} title={chat.title} />) : null }
+      { chats?.length ? chats.map((chat) => <ChatButton key={chat._id} id={chat._id} title={chat.title || ""} />) : null }
     </SidebarGroup>
   </SidebarGroup>
 }
