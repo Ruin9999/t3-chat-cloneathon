@@ -19,6 +19,7 @@ interface ChatTextboxButtonProps {
   isSubmittable?: boolean;
   isMicEnabled?: boolean;
   isMicListening?: boolean;
+  isWebSearchToggled?: boolean;
   generationStatus?: "submitted" | "streaming" | "ready" | "error";
 
   // Event handlers
@@ -36,6 +37,7 @@ export default function ChatTextboxButtons(props: ChatTextboxButtonProps) {
     isSubmittable,
     isMicEnabled,
     isMicListening,
+    isWebSearchToggled,
     generationStatus,
     onSelectedModelChange,
     onWebSearch,
@@ -107,11 +109,11 @@ export default function ChatTextboxButtons(props: ChatTextboxButtonProps) {
       </Popover>
 
       {/* Web search and file attachment buttons */}
-      <Button variant="outline" size="sm" className="h-8 px-3 text-xs" onClick={onWebSearch}>
+      <Button variant="outline" size="sm" className={cn("h-8 px-3 text-xs", isWebSearchToggled ? "bg-accent" : "bg-background")} onClick={onWebSearch} disabled={!selectedModel?.canWebSearch}>
         <Globe className="size-3" />
         <span className="ml-1">Search</span>
       </Button>
-      <Button variant="ghost" size="sm" className="size-8 p-0" onClick={onFileUpload} disabled={}>
+      <Button variant="ghost" size="sm" className="size-8 p-0" onClick={onFileUpload} disabled={!selectedModel?.canInputImages}>
         <Paperclip className="size-4" />
       </Button>
     </div>
@@ -119,7 +121,7 @@ export default function ChatTextboxButtons(props: ChatTextboxButtonProps) {
     {/* Voice and send buttons */}
     <div className="flex items-center space-x-2">
       <Button variant="ghost" size="sm" onClick={onMicClick} disabled={!isMicEnabled}>
-        <Mic className="size-4" />
+        { isMicListening ? <Square className="size-4" fill="" /> : <Mic className="size-4" /> }
       </Button>
       <Button variant="default" size="sm" disabled={(generationStatus != "ready" && generationStatus !== "streaming" && generationStatus !== "error") || (generationStatus === "ready" && !isSubmittable)} onClick={onSubmit}>
         {renderSubmitIcon()} {/* TODO: Button does not work after an error has occured. Need to figure it out. */}

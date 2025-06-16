@@ -21,6 +21,10 @@ export default defineSchema({
     name: v.string(),
     category: v.union(v.literal("OpenAI"), v.literal("Anthropic"), v.literal("Google"), v.literal("XAI"), v.literal("DeepSeek")),
     logo: v.string(),
-    enabled: v.optional(v.boolean()),
+    enabled: v.boolean(),
+    canUseTools: v.boolean(),
+    canInputImages: v.boolean(),
+    canGenerateObjects: v.boolean(),
+    canWebSearch: v.boolean(),
   })
 });

@@ -11,7 +11,7 @@ export const maxDuration = 30;
 
 export async function POST(req: Request) {
   let modelProvider;
-  const { messages, selectedModel } = await req.json();
+  const { messages, selectedModel, isWebSearchToggled } = await req.json();
   const client = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL || '');
   const category = await client.query(api.models.getCategoryByModelId, { modelId: selectedModel });
 
@@ -24,6 +24,7 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: modelProvider,
+    tools: isWebSearchToggled,
     messages,
     abortSignal: req.signal,
     onError: (error) => {

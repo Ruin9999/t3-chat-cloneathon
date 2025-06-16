@@ -1,9 +1,10 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ConvexQueryCacheProvider  } from "convex-helpers/react/cache";
 import { ConvexClientProvider } from "@/components/providers/ConvexClientProvider";
-import { SidebarProvider } from "@/components/ui/sidebar";
 
 import { Toaster } from "@/components/ui/sonner";
 import CustomSidebar from "./_components/custom_sidebar";
@@ -15,16 +16,23 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="antialiased">
         <ClerkProvider>
           <ConvexClientProvider>
             <ConvexClientProvider>
-              <SidebarProvider>
-                <CustomSidebar />
-                <main className="flex-1 flex">{children}</main>
-                <Toaster />
-              </SidebarProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <SidebarProvider>
+                  <CustomSidebar />
+                  <main className="flex-1 flex h-screen">{children}</main>
+                  <Toaster />
+                </SidebarProvider>
+              </ThemeProvider>
             </ConvexClientProvider>
           </ConvexClientProvider>
         </ClerkProvider>
