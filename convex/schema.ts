@@ -9,7 +9,8 @@ export default defineSchema({
   }),
   messages: defineTable({
     chatId: v.string(),
-    content: v.object({ text: v.string() }),
+    messageId: v.string(), // Message ID for ai-sdk
+    content: v.string(),
     sender: v.string(),
     avatarUrl: v.string(),
     model: v.string(),

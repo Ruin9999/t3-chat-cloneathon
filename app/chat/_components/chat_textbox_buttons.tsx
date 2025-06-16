@@ -17,6 +17,8 @@ interface ChatTextboxButtonProps {
 
   // Button state props
   isSubmittable?: boolean;
+  isMicEnabled?: boolean;
+  isMicListening?: boolean;
   generationStatus?: "submitted" | "streaming" | "ready" | "error";
 
   // Event handlers
@@ -32,6 +34,8 @@ export default function ChatTextboxButtons(props: ChatTextboxButtonProps) {
     models,
     selectedModel,
     isSubmittable,
+    isMicEnabled,
+    isMicListening,
     generationStatus,
     onSelectedModelChange,
     onWebSearch,
@@ -107,17 +111,17 @@ export default function ChatTextboxButtons(props: ChatTextboxButtonProps) {
         <Globe className="size-3" />
         <span className="ml-1">Search</span>
       </Button>
-      <Button variant="ghost" size="sm" className="size-8 p-0" onClick={onFileUpload}>
+      <Button variant="ghost" size="sm" className="size-8 p-0" onClick={onFileUpload} disabled={}>
         <Paperclip className="size-4" />
       </Button>
     </div>
 
     {/* Voice and send buttons */}
     <div className="flex items-center space-x-2">
-      <Button variant="ghost" size="sm" onClick={onMicClick}>
+      <Button variant="ghost" size="sm" onClick={onMicClick} disabled={!isMicEnabled}>
         <Mic className="size-4" />
       </Button>
-      <Button variant="default" size="sm" disabled={(generationStatus != "ready" && generationStatus !== "streaming") || (generationStatus === "ready" && !isSubmittable)} onClick={onSubmit}>
+      <Button variant="default" size="sm" disabled={(generationStatus != "ready" && generationStatus !== "streaming" && generationStatus !== "error") || (generationStatus === "ready" && !isSubmittable)} onClick={onSubmit}>
         {renderSubmitIcon()} {/* TODO: Button does not work after an error has occured. Need to figure it out. */}
       </Button>
     </div>

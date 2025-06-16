@@ -1,7 +1,9 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
 import { LogOut, CreditCard, BadgeCheck, Settings } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
@@ -10,6 +12,8 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 export default function SidebarUser() {
   const { user } = useUser();
   const { isMobile } = useSidebar();
+
+  if (!user) return <Button className="mb-2 py-5" onClick={() => redirect("/sign-in")}>Login</Button>
 
   return <SidebarMenu>
     <SidebarMenuItem>

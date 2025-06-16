@@ -1,5 +1,3 @@
-"use client"
-
 import SidebarUser from "./sidebar-user"
 import SidebarChats from "./sidebar-chats"
 import SidebarUtils from "./sidebar-utils"
@@ -7,8 +5,10 @@ import { Sidebar, SidebarHeader, SidebarContent, SidebarFooter } from "@/compone
 
 export default function CustomSidebar() {
   return <Sidebar collapsible="icon">
-    <SidebarContent>
+    <SidebarHeader>
       <SidebarUtils />
+    </SidebarHeader>
+    <SidebarContent>
       <SidebarChats />
     </SidebarContent>
     <SidebarFooter>
