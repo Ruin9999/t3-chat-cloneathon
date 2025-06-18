@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
-import { ConvexQueryCacheProvider  } from "convex-helpers/react/cache";
 import { ConvexClientProvider } from "@/components/providers/ConvexClientProvider";
+import { ConvexQueryCacheProvider } from "convex-helpers/react/cache";
 
 import { Toaster } from "@/components/ui/sonner";
 import CustomSidebar from "./_components/custom_sidebar";
@@ -20,7 +20,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="antialiased">
         <ClerkProvider>
           <ConvexClientProvider>
-            <ConvexClientProvider>
               <ThemeProvider
                 attribute="class"
                 defaultTheme="dark"
@@ -33,7 +32,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                   <Toaster />
                 </SidebarProvider>
               </ThemeProvider>
-            </ConvexClientProvider>
           </ConvexClientProvider>
         </ClerkProvider>
       </body>
