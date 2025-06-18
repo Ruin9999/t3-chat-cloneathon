@@ -11,7 +11,7 @@ export default function SidebarUtils() {
   const isCollapsed = state === "collapsed"
 
   return (
-    <SidebarGroup className="flex flex-col gap-2 p-2">
+    <SidebarGroup className="flex flex-col gap-3">
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => toggleSidebar()}>
           <PanelLeft className="size-4" />

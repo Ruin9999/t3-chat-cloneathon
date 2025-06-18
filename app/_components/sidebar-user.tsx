@@ -37,17 +37,13 @@ export default function SidebarUser() {
           sideOffset={4}
         >
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <BadgeCheck />
-              <span className="ml-2">My Account</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <CreditCard />
-              <span className="ml-2">Billing</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => redirect("/settings")}>
               <Settings />
               <span className="ml-2">Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem disabled={true}>
+              <CreditCard />
+              <span className="ml-2">Billing</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
