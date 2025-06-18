@@ -28,10 +28,11 @@ export default function ChatTextbox() {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const { id: chatId } = useParams<{ id: string }>();
   const { groupedModels, onGroupedModelsChange } = useModels();
-  const [ selectedModel, setSelectedModel ] = useState<Doc<"models"> | null>(null);
   const [ isWebSearchToggled, setIsWebSearchToggled ] = useState(false);
+  const [ selectedModel, setSelectedModel ] = useState<Doc<"models"> | null>(null);
+  const [shouldSubmitAfterInputSet, setShouldSubmitAfterInputSet] = useState(false);
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
-  const { status, input, handleInputChange, setMessages, handleSubmit, stop, reload } = useChat({
+  const { status, input, setInput, handleInputChange, setMessages, handleSubmit, stop, reload } = useChat({
     id: chatId || CONSTANTS.DEFAULT_CHAT_ID,
     body: {
       selectedModel: selectedModel?.id || null,
@@ -69,6 +70,7 @@ export default function ChatTextbox() {
   async function submitNewUserMessage() {
     if (!isReadyToSubmit || !user?.user) return;
     if (!chatId) {
+      sessionStorage.setItem("pendingChatMessage", input);
       const id = await convex.action(api.chats.create, { owner: user?.user?.id, content: input });
       router.push(`/chat/${id}`);
 
@@ -129,6 +131,44 @@ export default function ChatTextbox() {
     textarea.style.height = `${newHeight}px`
   }, [input])
 
+  //Handle submission after navigation using session storage
+  useEffect(() => {
+    if (!chatId || status !== "ready" || !selectedModel) return;
+    
+    const pendingMessage = sessionStorage.getItem("pendingChatMessage");
+    if (!pendingMessage) return;
+    
+    // Clear from sessionStorage immediately
+    sessionStorage.removeItem("pendingChatMessage");
+    
+    // Set the input
+    setInput(pendingMessage);
+    setShouldSubmitAfterInputSet(true);
+    
+    // Create and submit the message using the pendingMessage directly
+    setTimeout(async () => {
+      try {
+        await createMessage({
+          messageId: crypto.randomUUID(),
+          content: pendingMessage, // Use pendingMessage, not input!
+          sender: user?.user?.id || "DELETE_ME",
+        });
+        
+      } catch (error) {
+        console.error('Failed to submit pending message:', error);
+        toast.error("Failed to submit your message. Please try again.");
+      }
+    }, 100); // Reduced timeout - 1000ms is quite long
+    
+  }, [chatId, status, selectedModel, handleSubmit]); // Removed input dependency since we don't need it
+
+  // Separate effect to handle submission after input is set
+  useEffect(() => {
+    if (shouldSubmitAfterInputSet && input.trim().length > 0 && status === "ready") {
+      setShouldSubmitAfterInputSet(false);
+      handleSubmit();
+    }
+  }, [shouldSubmitAfterInputSet, input, status, handleSubmit]);
   return <div className="relative w-full max-w-4xl mx-auto m-4 rounded-lg border bg-background/20 backdrop-blur-md h-fit">
     <Textarea
       ref={textAreaRef}

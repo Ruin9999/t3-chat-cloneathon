@@ -284,13 +284,6 @@ export default function Setting1sPage() {
                 </div>
                 <Switch defaultChecked/>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Font size</Label>
-                  <p className="text-sm text-muted-foreground">receive emails about new products and features</p>
-                </div>
-                <Switch />
-              </div>
 
               <Separator />
               <div className="space-y-4">

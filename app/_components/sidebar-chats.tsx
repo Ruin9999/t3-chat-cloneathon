@@ -4,8 +4,6 @@ import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
-import { Button } from "@/components/ui/button";
-import { Search, Plus } from "lucide-react";
 import { SidebarGroup, SidebarGroupLabel } from "@/components/ui/sidebar";
 import ChatButton from "./sidebar-chat-button";
 
