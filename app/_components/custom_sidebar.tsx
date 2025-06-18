@@ -20,7 +20,7 @@ export default function CustomSidebar() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const { state, isMobile, toggleSidebar } = useSidebar();
-  const chats = useQuery(api.chats.get);
+  const chats = useQuery(api.chats.get, user ? {} : "skip");
 
   return <Sidebar collapsible="icon">
     <SidebarHeader>
