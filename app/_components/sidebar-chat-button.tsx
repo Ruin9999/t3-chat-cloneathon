@@ -9,13 +9,13 @@ import { Button } from "@/components/ui/button";
 import { ExternalLink, Edit3, Pin, Trash2, Share } from "lucide-react";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger, ContextMenuSeparator } from "@/components/ui/context-menu";
 
-interface ChatButtonProps {
+interface SidebarChatButtonProps {
   id: string
   title: string
   className?: string
 }
 
-export default function ChatButton(props: ChatButtonProps) {
+export function SidebarChatButton(props: SidebarChatButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return <ContextMenu>
@@ -30,14 +30,14 @@ export default function ChatButton(props: ChatButtonProps) {
         <Link href={`/chat/${props.id}`}>
           <span className="text-sm font-medium flex-1 truncate">{ props.title }</span>
           
-          <div className={cn("absolute right-2 flex items-center gap-2 transition-all duration-200 ease-in-out bg-background px-2 py-1 rounded-lg", isHovered ? "opacity-100" : "opacity-0")}>
+          {/* <div className={cn("absolute right-2 flex items-center gap-2 transition-all duration-200 ease-in-out bg-background px-2 py-1 rounded-lg", isHovered ? "opacity-100" : "opacity-0")}>
             <div className="group/pin">
               <Pin className="size-4 text-gray-400 group-hover/pin:text-muted-foreground transition-colors" />
             </div>
             <div className="group/trash">
               <Trash2 className="size-4 text-red-400 group-hover/trash:text-red-600 transition-colors cursor-pointer" />
             </div>
-          </div>
+          </div> */}
         </Link>
       </Button>
     </ContextMenuTrigger>
