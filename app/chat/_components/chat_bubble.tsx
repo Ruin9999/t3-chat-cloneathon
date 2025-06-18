@@ -3,16 +3,18 @@
 import { Message } from "ai";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import remarkGfm from "remark-gfm";
-import ReactMarkdown from "react-markdown";
 
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { CustomReactMarkdown } from "../../../components/react-markdown/custom_react_markdown";
 import { Copy, Edit, RotateCcw, GitBranch, Check } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 
 export default function ChatBubble(props: Message) {
   const isUser = props.role === "user";
-  const [ isCopied, setIsCopied ] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState(false);
 
   async function handleCopyClick() {
     await navigator.clipboard.writeText(props.content);
@@ -21,29 +23,15 @@ export default function ChatBubble(props: Message) {
   }
 
   return <div className="flex flex-col group relative">
-    <div className={cn("rounded-md p-4", isUser ? "bg-accent ml-auto w-3/4" : "w-full")}>
-      <ReactMarkdown 
-        remarkPlugins={[remarkGfm]}
-        className="prose prose-sm dark:prose-invert max-w-none"
-        components={{
-          p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-          code: ({ children, className }) => {
-            const isInline = !className;
-            return isInline ? (
-              <code className="bg-muted px-1 py-0.5 rounded text-sm font-mono">{children}</code>
-            ) : (
-              <code className={className}>{children}</code>
-            );
-          },
-        }}
-      >
+    <div className={cn("rounded-md p-4", isUser ? "bg-accent ml-auto max-w-3/4" : "w-full")}>
+      <CustomReactMarkdown>
         {props.content}
-      </ReactMarkdown>
+      </CustomReactMarkdown>
     </div>
 
     {/* Icons section */}
     <div className={cn(
-      "flex items-center gap-1 px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200",
+      "flex items-center gap-1 mx-2 my-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200",
       isUser ? "justify-end" : "justify-start"
     )}>
       {isUser ? (<>
@@ -71,7 +59,7 @@ export default function ChatBubble(props: Message) {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="sm" className="size-8 p-0">
+            <Button variant="ghost" size="sm" className="size-8 p-0" onClick={() => setIsEditing(true)}>
               <Edit className="size-4" />
               <span className="sr-only">Edit</span>
             </Button>
@@ -114,9 +102,9 @@ export default function ChatBubble(props: Message) {
             <p className="text-sm">Branch</p>            
           </TooltipContent>
         </Tooltip>
-        <span className="text-sm text-muted-foreground ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          {props.role}
-        </span>
+        <p className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          {props.annotations?.[0] && typeof props.annotations[0] === 'object' && 'sender' in props.annotations[0] && (props.annotations[0] as any).sender} 
+        </p>
       </>)}
     </div>
   </div>

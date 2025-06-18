@@ -120,3 +120,20 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer base {
+  :root {
+    --text: #1e1410;
+    --background: #faf3f0;
+    --primary: #74351a;
+    --secondary: #ee946d;
+    --accent: #fa4f05;
+  }
+  .dark {
+    --text: #efe5e1;
+    --background: #0f0805;
+    --primary: #e5a68b;
+    --secondary: #923811;
+    --accent: #fa4f05;
+  }
+}

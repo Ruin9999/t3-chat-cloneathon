@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useChat } from "@ai-sdk/react";
 import { useParams } from "next/navigation";
 
@@ -14,7 +15,7 @@ export default function ChatPage() {
   return <SidebarInset className="flex-1 flex flex-col">
     <div className="flex-1 flex flex-col h-full relative">
       <div className="flex-1 overflow-y-auto overflow-x-hidden">
-        <div className="w-full max-w-4xl mx-auto space-y-4 p-4 pt-7 pb-36">
+        <div className="w-full max-w-4xl mx-auto space-y-2 p-4 pt-7 pb-36">
           {messages.map((message, index) => (
             <ChatBubble 
               key={index} 

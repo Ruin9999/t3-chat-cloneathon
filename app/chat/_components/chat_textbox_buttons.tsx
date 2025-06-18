@@ -109,7 +109,7 @@ export default function ChatTextboxButtons(props: ChatTextboxButtonProps) {
       </Popover>
 
       {/* Web search and file attachment buttons */}
-      <Button variant="outline" size="sm" className={cn("h-8 px-3 text-xs", isWebSearchToggled ? "bg-accent" : "bg-background")} onClick={onWebSearch} disabled={!selectedModel?.canWebSearch}>
+      <Button variant="outline" size="sm" className={cn("h-8 px-3 text-xs", isWebSearchToggled ? "dark:bg-accent" : "bg-background")} onClick={onWebSearch} disabled={!selectedModel?.canWebSearch}>
         <Globe className="size-3" />
         <span className="ml-1">Search</span>
       </Button>

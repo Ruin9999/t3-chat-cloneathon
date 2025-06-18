@@ -6,20 +6,26 @@ import { useUser } from "@clerk/nextjs";
 import { useConvex } from "convex/react";
 import { CONSTANTS } from "@/lib/constants";
 import { Message, useChat } from "@ai-sdk/react";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import { useEnter } from "@/hooks/use_enter";
 import { api } from "@/convex/_generated/api";
 import { useModels } from "@/hooks/use_models";
 import { Doc } from "@/convex/_generated/dataModel";
+import { useEffect, useState, useRef } from "react";
+import { useParams, useRouter } from "next/navigation";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
 import { Textarea } from "@/components/ui/textarea";
 import ChatTextboxButtons from "./chat_textbox_buttons";
 
+/**
+ * This component handles most of the chat functionality. Saving, reloading, streaming, and creating...
+ * @returns React.ReactNode
+ */
 export default function ChatTextbox() {
   const user = useUser();
   const convex = useConvex();
+  const router = useRouter();
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const { id: chatId } = useParams<{ id: string }>();
   const { groupedModels, onGroupedModelsChange } = useModels();
   const [ selectedModel, setSelectedModel ] = useState<Doc<"models"> | null>(null);
@@ -61,13 +67,19 @@ export default function ChatTextbox() {
   }
 
   async function submitNewUserMessage() {
-    if (!isReadyToSubmit) return;
-    await createMessage({
-      messageId: crypto.randomUUID(),
-      content: input,
-      sender: user?.user?.id || "DELETE_ME",
-    })
-    handleSubmit();
+    if (!isReadyToSubmit || !user?.user) return;
+    if (!chatId) {
+      const id = await convex.action(api.chats.create, { owner: user?.user?.id, content: input });
+      router.push(`/chat/${id}`);
+
+    } else {
+      await createMessage({
+        messageId: crypto.randomUUID(),
+        content: input,
+        sender: user?.user?.id || "DELETE_ME",
+      });
+      handleSubmit();
+    }
   }
 
   async function handleSubmitClick() {
@@ -86,8 +98,12 @@ export default function ChatTextbox() {
       const formattedMessages = messages.map((message) => ({
         id: message.messageId,
         content: message.content,
-        // role: message.sender === "assistant" ? "assistant" as const : "user" as const,
         role: message.sender.includes("user") ? "user" as const : "assistant" as const,
+        annotations: [{
+          sender: message.sender,
+          avatarUrl: message.avatarUrl,
+          timestamp: message._creationTime,
+        }]
       }));
       setMessages(formattedMessages);
     }
@@ -104,12 +120,22 @@ export default function ChatTextbox() {
     }
   }, [transcript, input, handleInputChange, resetTranscript]);
 
-  return <div className="relative w-full max-w-4xl mx-auto m-4 rounded-lg border  bg-background/20 backdrop-blur-md">
+  // Handle textbox resizing
+  useEffect(() => {
+    const textarea = textAreaRef.current;
+    if (!textarea) return;
+    textarea.style.height = "auto"
+    const newHeight = Math.min(Math.max(textarea.scrollHeight, 50), 200)
+    textarea.style.height = `${newHeight}px`
+  }, [input])
+
+  return <div className="relative w-full max-w-4xl mx-auto m-4 rounded-lg border bg-background/20 backdrop-blur-md h-fit">
     <Textarea
+      ref={textAreaRef}
       value={input}
       onChange={handleInputChange}
       placeholder="Type your message here..."
-      className="min-h-[50px] max-h-[500px] resize-none border-0 shadow-none rounded-lg focus-visible:ring-0 transition-all duration-200 ease-in-out bg-inherit dark:bg-transparent placeholder:text-muted-foreground"
+      className="min-h-[50px] max-h-[500px] resize-none border-0 shadow-none rounded-lg focus-visible:ring-0 transition-all duration-200 ease-in-out bg-inherit dark:bg-transparent placeholder:text-muted-foreground overflow-y-auto"
     />
 
     <div className="p-2">
