@@ -1,12 +1,15 @@
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 export const get = query({
-  args: {
+  args: { 
     chatId: v.string(),
   },
-  handler: async ({ db }, { chatId }) => {
-    const messages = await db.query("messages").filter((q) => q.eq(q.field("chatId"), chatId)).collect();
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity === null) throw new ConvexError("Unauthorized call to query.");
+
+    const messages = await ctx.db.query("messages").filter((q) => q.eq(q.field("chatId"), args.chatId)).collect();
     return messages;
   },
 })
@@ -22,6 +25,9 @@ export const create = mutation({
     type: v.union(v.literal("text"), v.literal("image"), v.literal("file")),
   },
   handler: async (ctx, args) => { 
+    const identity = ctx.auth.getUserIdentity();
+    if (identity === null) throw new ConvexError("Unauthorized call to mutation.");
+
     return await ctx.db.insert("messages", args);
   },
 })

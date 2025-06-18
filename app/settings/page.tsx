@@ -356,7 +356,7 @@ export default function Setting1sPage() {
               onClick={() => setActiveTab(tab.id)}
               className={cn(
                 "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-200",
-                activeTab == tab.id ? "bg-primary text-primary-foreground" : "bg-muted-foreground hover:text-foreground hover:bg-muted/50"
+                activeTab == tab.id ? "bg-primary text-primary-foreground" : "bg-background hover:text-foreground hover:bg-muted"
               )}
             >
               <Icon className="size-5" />

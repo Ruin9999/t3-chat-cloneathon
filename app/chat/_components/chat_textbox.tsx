@@ -71,7 +71,7 @@ export default function ChatTextbox() {
     if (!isReadyToSubmit || !user?.user) return;
     if (!chatId) {
       sessionStorage.setItem("pendingChatMessage", input);
-      const id = await convex.action(api.chats.create, { owner: user?.user?.id, content: input });
+      const id = await convex.action(api.chats.create, { content: input });
       router.push(`/chat/${id}`);
 
     } else {

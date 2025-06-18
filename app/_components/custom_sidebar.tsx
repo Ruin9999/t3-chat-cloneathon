@@ -20,7 +20,7 @@ export default function CustomSidebar() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const { state, isMobile, toggleSidebar } = useSidebar();
-  const chats = useQuery(api.chats.get, user?.id ? { user: user.id }: "skip");
+  const chats = useQuery(api.chats.get);
 
   return <Sidebar collapsible="icon">
     <SidebarHeader>
@@ -40,7 +40,7 @@ export default function CustomSidebar() {
           variant="default"
           size={state === "collapsed" ? "icon" : "sm"}
           className={cn("flex items-center", state === "collapsed" ? "size-8" : "w-full")}
-          onClick={() => window.location.href = "/"}
+          onClick={() => redirect("/")}
         >
           <Plus className="size-4 shrink-0" />
           <span className="flex-1 flex items-center text-left group-data-[collapsible=icon]:hidden">New Chat</span>
@@ -51,7 +51,7 @@ export default function CustomSidebar() {
         <SidebarGroupContent>
           {/* Scrollable content area */}
           <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto">
-            { chats?.length ? chats.map((chat) => <SidebarChatButton key={chat._id} id={chat._id} title={chat.title || ""} />) : <p className="text-sm px-2">No chats</p> }
+            { chats?.length ? chats.map((chat) => <SidebarChatButton key={chat._id} {...chat} />) : <p className="text-sm px-2">No chats</p> }
           </div>
         </SidebarGroupContent>
       </SidebarGroup>

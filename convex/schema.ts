@@ -5,8 +5,8 @@ export default defineSchema({
   chats: defineTable({
     title: v.optional(v.string()),
     owner: v.string(),
-    participants: v.optional(v.array(v.string())),
-  }),
+    pinned: v.boolean(),
+  }).index("byOwner", ["owner"]),
   messages: defineTable({
     chatId: v.string(),
     messageId: v.string(), // Message ID for ai-sdk
@@ -15,7 +15,7 @@ export default defineSchema({
     avatarUrl: v.string(),
     model: v.string(),
     type: v.union(v.literal("text"), v.literal("image"), v.literal("file")),
-  }),
+  }).index("byChatId", ["chatId"]),
   models: defineTable({
     id: v.string(),
     name: v.string(),
